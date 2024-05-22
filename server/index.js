@@ -2,7 +2,7 @@ const express = require("express");
 
 const app = express();
 
-const PORT = 9001;
+const PORT = processs.env.PORT;
 
 // Routes
 app.get("/", (req, res) => {
