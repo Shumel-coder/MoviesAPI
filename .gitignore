@@ -1,2 +1,2 @@
-# ignore config directory
-/server/config
+# ignore env file
+.env
