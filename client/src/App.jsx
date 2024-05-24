@@ -31,7 +31,7 @@ function App() {
       console.log(res);
       let message = res.text;
       console.log(message);
-      window.location.reload();
+      renderMovies();
     } catch (error) {
       console.log(error);
     }
