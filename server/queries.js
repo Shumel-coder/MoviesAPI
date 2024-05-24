@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 require("dotenv").config();
 // Connect to Postgres using node-postgres package
 
@@ -22,6 +24,24 @@ const getMovies = (req, res) => {
   });
 };
 
+const addMovie = (req, res) => {
+  const name = req.body.name;
+  const genre = req.body.genre;
+  const releaseyear = req.body.releaseyear;
+
+  pool.query(
+    "INSERT INTO moviestable (name, genre, releaseyear) VALUES ($1, $2, $3)",
+    [name, genre, releaseyear],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      res.status(201).json(`Movie added with ID: ${results.insertId}`);
+    }
+  );
+};
+
 module.exports = {
   getMovies,
+  addMovie,
 };

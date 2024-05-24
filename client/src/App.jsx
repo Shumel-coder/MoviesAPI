@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import Form from "./components/Form";
 
 function App() {
   let [movies, setMovies] = useState(null);
@@ -18,32 +19,58 @@ function App() {
     }
   };
 
-  let addMovie = async () => {
+  let addMovie = async (newMovie) => {
     try {
-    } catch {}
+      let res = await fetch("http://localhost:9001/movies", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newMovie),
+      });
+      console.log(res);
+      let message = res.text;
+      console.log(message);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    getMovies();
-  });
+    if (!movies) {
+      getMovies();
+    }
+  }, []);
 
   let renderMovies = () => {
     if (movies) {
-      return movies.map((movie) => {
-        return (
-          <div>
-            <h3>{movie.name}</h3>
-            <h4>{movie.genre}</h4>
-            <h4>{movie.releaseyear}</h4>
-          </div>
-        );
-      });
+      return (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Genre</th>
+              <th>Release Year</th>
+            </tr>
+          </thead>
+          <tbody>
+            {movies.map((movie, index) => (
+              <tr key={index}>
+                <td>{movie.name}</td>
+                <td>{movie.genre}</td>
+                <td>{movie.releaseyear}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
     } else {
       return <div>No movies found!</div>;
     }
   };
 
-  renderLoading = () => {
+  let renderLoading = () => {
     return <div>...Loading</div>;
   };
 
@@ -51,6 +78,7 @@ function App() {
     <>
       <div className="App">
         <h1>Welcome to Movies Catalog!</h1>
+        <Form addMovie={addMovie} />
         <div>{loading ? renderLoading() : renderMovies()}</div>
       </div>
     </>

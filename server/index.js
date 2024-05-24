@@ -8,7 +8,7 @@ const app = express();
 
 const db = require("./queries");
 
-const PORT = process.env.PORT;
+const PORT = 9001;
 
 // Allow static assets in public folder
 app.use(express.static("public"));
@@ -29,24 +29,8 @@ app.get("/test", (req, res) => {
 });
 
 // Create
-app.post("/movies", (req, res) => {
-  let { name, genre, releaseyear } = req.body;
-
-  if (name && genre && releaseyear) {
-    // do something
-    console.log(
-      `Adding new movie! ${name} is a movie in the ${genre} category and was released in ${releaseyear}`
-    );
-    res.json({ id: 1, name, genre, releaseyear });
-  } else {
-    console.log("Error adding movie!");
-    res
-      .status(400)
-      .send("Error adding movie! Movie needs a name, genre, and release year.");
-  }
-
-  res.send("Received post request");
-});
+app.options("/movies", cors());
+app.post("/movies", cors(), db.addMovie);
 // Read
 app.get("/movies", cors(), db.getMovies);
 
